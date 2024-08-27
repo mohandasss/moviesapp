@@ -1,9 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-
-/**
- * Components and layouts...
- */
 import {
   MaxWidthLayout,
   NavbarFooterIncluded,
@@ -11,32 +7,42 @@ import {
   TopSection,
   MovieContainer,
 } from "layouts";
-import {
-  getSingleMovie,
-  getSingleMovieCredits,
-  getSimilarMovies,
-} from "services/api";
+import { getSingleMovie, getSingleMovieCredits, getSimilarMovies } from "services/api";
 import { truncateString } from "utils/truncateString";
 import { extractImgPoster } from "utils/extractImg";
 import { BsStarFill } from "react-icons/bs";
+import Loader from "../../routes/searchRoute/Loader "; // Assuming you have a Loader component
 
 const SingleMovie = () => {
   const [singleMovie, setSingleMovie] = useState();
   const [singleMovieCredits, setSingleMovieCredits] = useState();
   const [similarMovies, setSimilarMovies] = useState();
+  const [loading, setLoading] = useState(true); // Loading state
   const { movieId } = useParams();
+
   useEffect(() => {
+    setLoading(true); // Set loading to true at the start of data fetch
     (async function () {
-      const result = await getSingleMovie(movieId);
-      const creditResult = await getSingleMovieCredits(movieId);
-      const { results: similarMoviesResult } = await getSimilarMovies(movieId);
-      result && setSingleMovie(result);
-      creditResult && setSingleMovieCredits(creditResult);
-      similarMoviesResult && setSimilarMovies(similarMoviesResult.slice(0, 10));
+      try {
+        const result = await getSingleMovie(movieId);
+        const creditResult = await getSingleMovieCredits(movieId);
+        const { results: similarMoviesResult } = await getSimilarMovies(movieId);
+        
+        if (result) setSingleMovie(result);
+        if (creditResult) setSingleMovieCredits(creditResult);
+        if (similarMoviesResult) setSimilarMovies(similarMoviesResult.slice(0, 10));
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false); // Set loading to false after data fetch is complete
+      }
     })();
   }, [movieId]);
 
+  if (loading) return <Loader />; // Show loader when loading is true
+
   if (!singleMovie) return null;
+
   return (
     <NavbarFooterIncluded>
       <div
@@ -50,7 +56,6 @@ const SingleMovie = () => {
       >
         <MaxWidthLayout>
           <div className="grid grid-cols-1 md:grid-cols-[28%_70%] gap-[2%]">
-            {/* Poster Section */}
             <div className="flex items-center justify-center md:justify-start">
               <img
                 src={extractImgPoster(singleMovie.poster_path)}
@@ -58,8 +63,6 @@ const SingleMovie = () => {
                 className="rounded-md shadow-lg"
               />
             </div>
-
-            {/* Content Section */}
             <div className="self-center space-y-5">
               <h1 className="text-center md:text-left custom-movie-title">
                 {singleMovie.title}
@@ -73,7 +76,6 @@ const SingleMovie = () => {
               <p className="leading-7">
                 {truncateString(singleMovie.overview)}
               </p>
-              {/* <button className="custom-green-btn">View Details</button> */}
             </div>
           </div>
         </MaxWidthLayout>
@@ -82,7 +84,6 @@ const SingleMovie = () => {
       <TopSection>
         <MaxWidthLayout>
           <div className="grid grid-cols-1 md:grid-cols-[76%_20%] gap-[4%]">
-            {/* Left section */}
             <div className="space-y-8">
               <h2 className="custom-section-title">All Casts</h2>
               <div className="grid grid-cols-2 gap-8 sm:grid-cols-3 md:grid-cols-4">
@@ -106,9 +107,8 @@ const SingleMovie = () => {
                 })}
               </div>
             </div>
-            {/* Right Section */}
+
             <div className="space-y-8">
-              {/* Genres */}
               <div className="space-y-2">
                 <h2 className="custom-minor-title">Genres</h2>
                 <div className="flex flex-row flex-wrap">
@@ -124,38 +124,40 @@ const SingleMovie = () => {
                   })}
                 </div>
               </div>
-              {/* Release Date */}
+
               <div className="space-y-2">
                 <h2 className="custom-minor-title">Release Date</h2>
                 <p>{singleMovie.release_date}</p>
               </div>
+
               <div className="space-y-2">
                 <h2 className="custom-minor-title">Rating</h2>
                 <p>{singleMovie.vote_average}</p>
               </div>
+
               <div className="space-y-2">
                 <h2 className="custom-minor-title">Popularity</h2>
                 <p>{singleMovie.popularity}</p>
               </div>
+
               <div className="space-y-2">
                 <h2 className="custom-minor-title">Revenue</h2>
                 <p>{singleMovie.revenue}</p>
               </div>
+
               <div className="space-y-2">
                 <h2 className="custom-minor-title">Status</h2>
                 <p>{singleMovie.status}</p>
               </div>
+
               <div className="space-y-2">
                 <h2 className="custom-minor-title">Runtime</h2>
                 <p>{singleMovie.runtime}</p>
               </div>
+
               <div className="space-y-2">
                 <h2 className="custom-minor-title">Tagline</h2>
                 <p>{singleMovie.tagline}</p>
-              </div>
-              <div className="space-y-2">
-                <h2 className="custom-minor-title">Runtime</h2>
-                <p>{singleMovie.runtime}</p>
               </div>
             </div>
           </div>

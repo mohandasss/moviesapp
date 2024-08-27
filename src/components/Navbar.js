@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import { GiHamburgerMenu } from "react-icons/gi";
-import { ImCross } from "react-icons/im";
 import { Link, NavLink } from "react-router-dom";
 import { navItems } from "datas";
 import { useSearchProvider } from "contexts/searchContext";
@@ -11,7 +10,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [providedInput, setProvidedInput] = useState("");
-  const { searchedKey, updateSearchedKey } = useSearchProvider();
+  const { updateSearchedKey } = useSearchProvider();
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
@@ -20,7 +19,7 @@ const Navbar = () => {
       <div className="w-full flex items-center justify-between space-x-5 p-5 bg-black">
         <Link to="/">
           <h4 className="uppercase font-AtypDisplayBold text-green-500">
-            MovieMaster
+            FilmFolio
           </h4>
         </Link>
         <div className="justify-between w-full space-x-5 hidden lg:flex">
@@ -52,7 +51,6 @@ const Navbar = () => {
                 navigate("/search");
               }}
             >
-              {/* <BsSearch /> */}
               <FaSearch />
             </button>
           </div>
