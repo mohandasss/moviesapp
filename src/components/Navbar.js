@@ -21,6 +21,8 @@ const Navbar = () => {
           <h4 className="uppercase font-AtypDisplayBold text-green-500">
             FilmFolio
           </h4>
+
+          
         </Link>
         <div className="justify-between w-full space-x-5 hidden lg:flex">
           <ul className="flex items-center justify-center space-x-5">
