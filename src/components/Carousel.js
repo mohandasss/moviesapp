@@ -78,3 +78,8 @@ const Carousel = ({ moviesList = [] }) => {
 };
 
 export default Carousel;
+
+/*
+  This is a block comment.
+  It can span multiple lines.
+*/
