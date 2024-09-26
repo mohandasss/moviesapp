@@ -82,4 +82,6 @@ export default Carousel;
 /*
   This is a block comment.
   It can span multiple lines.
-*/
+
+This is a block comment.
+It can span multiple lines.*/
